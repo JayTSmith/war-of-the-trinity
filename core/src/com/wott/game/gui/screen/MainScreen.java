@@ -45,7 +45,7 @@ public class MainScreen implements Screen, InputProcessor {
         camera = new OrthographicCamera();
 
         loadMap(Gdx.files.internal(mapPath).file().getAbsolutePath());
-        collisionLayer = map.getLayers().getCount() - 1;
+        collisionLayer = map.getLayers().getIndex("Hit Boxes");
 
         mEncounters = new Encounter[5];
         for (int i = 0; i < 5; i++) {
@@ -96,13 +96,13 @@ public class MainScreen implements Screen, InputProcessor {
 
         for (RectangleMapObject mapObject : mapObjects.getByType(RectangleMapObject.class)) {
             Rectangle hitBox = mapObject.getRectangle();
-            hasCollided = Intersector.overlaps(playerHitBox, hitBox);
+            hasCollided = Intersector.overlaps(hitBox, playerHitBox) || hasCollided;
             if (hasCollided) break;
         }
 
         for (Encounter encounter : mEncounters) {
             Rectangle hitBox = encounter.getSprite().getBoundingRectangle();
-            hasCollided = Intersector.overlaps(hitBox, playerHitBox);
+            hasCollided = Intersector.overlaps(hitBox, playerHitBox) || hasCollided;
             if (hasCollided) break;
         }
 
